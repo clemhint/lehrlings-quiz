@@ -200,7 +200,7 @@ p { margin: 0; max-width: 62ch; }
       <div class="titles">
         <span class="kicker">Dein Ergebnis: <span id="r-score-text"></span> Punkte</span>
         <h2 id="r-title"></h2>
-        <span class="say" id="r-say"></span>
+        <span class="say" id="r-sub"></span>
       </div>
     </div>
     <p id="r-text"></p>
@@ -275,14 +275,14 @@ p { margin: 0; max-width: 62ch; }
   ];
 
   var LEVELS = [
-    { min: 12, max: 14, title: "Zukünftige Super-PKA", say: "Leiwand!",
-      text: "Genau, organisiert, teamfähig. Du hast das Zeug dazu." },
-    { min: 9, max: 11, title: "PKA mit Potenzial", say: "Do is wos drin!",
-      text: "Gute Basis, der Rest wächst beim Schnuppern." },
-    { min: 5, max: 8, title: "Talent für Teamarbeit", say: "Mitanond geht's leichter!",
-      text: "Menschen und Organisation liegen dir. Mit der richtigen Ambition kann aus dir ein:e richtig gute:r PKA werden. Schau dich aber auch in anderen Berufen um." },
-    { min: 0, max: 4, title: "Entdecker:in", say: "Schau ma moi!",
-      text: "Noch offen, und das ist normal. Probier vieles aus." }
+    { min: 12, max: 14, title: "Zukünftige Super-PKA", sub: "Genau, organisiert, teamfähig.",
+      text: "Du hast das Zeug dazu, ein:e unglaublich wertvolle:r PKA zu werden, um die/den sich jede Apotheke reißen wird - nütze dein Potential!" },
+    { min: 9, max: 11, title: "PKA mit Potenzial", sub: "Richtig gute Basis",
+      text: "Der Rest wächst beim Tun. Mit Fleiß und Ambition bist du auf dem besten Weg in Richtung Super-PKA!" },
+    { min: 5, max: 8, title: "Talent für Teamarbeit", sub: "Menschen und Organisation liegen dir.",
+      text: "Mit der richtigen Ambition kann auch aus dir ein:e richtig gute:r PKA werden. Schau dich aber auch in anderen Berufen um." },
+    { min: 0, max: 4, title: "Entdecker:in", sub: "Alles noch offen",
+      text: "Und das ist ganz normal. Probier noch vieles aus!" }
   ];
 
   // Instagram-Profil der Apotheke eintragen (z. B. "https://www.instagram.com/…/"), dann wird "Instagram" im Ergebnis verlinkt.
@@ -403,7 +403,7 @@ p { margin: 0; max-width: 62ch; }
 
     $("r-score").textContent = total;
     $("r-score-text").textContent = total;
-    $("r-say").textContent = level.say;
+    $("r-sub").textContent = level.sub;
     $("r-title").textContent = level.title;
     $("r-text").textContent = level.text;
 
