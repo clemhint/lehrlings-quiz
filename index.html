@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PKA-Check · Wallersee Apotheke</title>
+<meta name="description" content="Passt die Lehre zur PKA in der Wallersee Apotheke zu dir? 7 Fragen, 14 Punkte.">
+<style>
+/* Gestaltung nach Brand Guidelines Wallersee Apotheke (Stand 05/2026).
+   Schriften: Mg¹² (Headlines, Fließtext) und Basier Square Mono (Auszeichnung) sind lizenzpflichtige
+   Schriften der Atipo Foundry. Liegen die Webfont-Dateien in ./fonts/, werden sie verwendet,
+   sonst greift der in den Guidelines definierte Fallback Arial. */
+@font-face { font-family: "Mg"; src: local("Mg Regular"), local("Mg-Regular"), url("fonts/Mg-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Mg"; src: local("Mg Bold"), local("Mg-Bold"), url("fonts/Mg-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Basier Square Mono"; src: local("Basier Square Mono Regular"), local("BasierSquareMono-Regular"), url("fonts/BasierSquareMono-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Basier Square Mono"; src: local("Basier Square Mono SemiBold"), local("BasierSquareMono-SemiBold"), url("fonts/BasierSquareMono-SemiBold.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+
+/* Layout: Sand als Grund, weiße Karte, Frost als ruhige Fläche, Kobalt für Schrift und Aktionen,
+   Limette nur als Hervorhebung (Auswahl, Ergebnis). Bewusst nur ein helles Theme, wie in den Guidelines. */
+:root {
+  --kobalt: #2158a5;
+  --frost: #bacfd9;
+  --petrol: #005862;
+  --sand: #dfded9;
+  --limette: #b9d989;
+  --rotbraun: #7c533c;
+  --white: #ffffff;
+
+  --bg: var(--sand);
+  --surface: var(--white);
+  --fg: var(--kobalt);
+  --text: #1d3f6e;          /* Kobalt abgedunkelt für lange Fließtexte */
+  --muted: #56708f;
+  --line: #d5e2e8;          /* Frost aufgehellt */
+  --frost-soft: #e6eef2;
+
+  --font-main: "Mg", Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --font-mono: "Basier Square Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --radius: 18px;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-main);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  padding-inline: 16px;
+  padding-block: max(24px, env(safe-area-inset-top, 0px)) max(32px, env(safe-area-inset-bottom, 0px));
+}
+[hidden] { display: none !important; }
+
+.wrap { max-width: 42rem; margin-inline: auto; display: grid; gap: 18px; }
+
+/* Kopfzeile: Markenname im Text (Guidelines: "Reine Bildmarke und Markenname im Text integriert").
+   Liegt das offizielle Logo als assets/logo.svg vor, wird es statt des Textes gezeigt. */
+.brandbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brandname { font-weight: 700; color: var(--kobalt); font-size: 1.05rem; line-height: 1.1; }
+.brandlogo { height: 40px; width: auto; display: block; }
+.crumb { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .04em; color: var(--kobalt); }
+.crumb b { font-weight: 600; }
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: clamp(22px, 5vw, 40px);
+  display: grid; gap: 22px;
+}
+
+h1, h2 { font-family: var(--font-main); font-weight: 700; color: var(--kobalt); line-height: 1.08; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.1rem, 7.5vw, 3rem); letter-spacing: -.01em; }
+h2 { font-size: clamp(1.35rem, 4.6vw, 1.75rem); letter-spacing: -.005em; }
+p { margin: 0; max-width: 62ch; }
+
+.kicker {
+  font-family: var(--font-mono); font-size: .8rem; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--petrol);
+}
+.say { font-weight: 700; color: var(--petrol); font-size: 1.15rem; }
+
+.facts { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
+.facts li {
+  background: var(--frost-soft); color: var(--kobalt);
+  font-family: var(--font-mono); font-size: .8rem;
+  border-radius: 999px; padding: 5px 12px;
+}
+
+.btn {
+  font: inherit; font-weight: 700; cursor: pointer;
+  border: 2px solid var(--kobalt); border-radius: 999px;
+  padding: 12px 26px; min-height: 48px;
+  background: var(--kobalt); color: var(--white);
+  transition: background .15s ease, color .15s ease;
+}
+.btn:hover { background: var(--petrol); border-color: var(--petrol); }
+.btn:disabled { opacity: .35; cursor: not-allowed; background: var(--kobalt); border-color: var(--kobalt); }
+.btn.ghost { background: transparent; color: var(--kobalt); }
+.btn.ghost:hover { background: var(--frost-soft); color: var(--kobalt); border-color: var(--kobalt); }
+.btn:focus-visible, .option:focus-visible { outline: 3px solid var(--petrol); outline-offset: 3px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; }
+
+/* Fortschritt: 7 Segmente, eines je Kategorie */
+.progress { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.progress span { height: 6px; border-radius: 3px; background: var(--line); transition: background .2s; }
+.progress span.done { background: var(--kobalt); }
+.progress span.now { background: var(--limette); }
+
+.qmeta {
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  font-family: var(--font-mono); font-size: .78rem; letter-spacing: .05em; color: var(--muted);
+}
+.qmeta .cat { color: var(--kobalt); font-weight: 600; text-transform: uppercase; }
+.qmeta .step { font-variant-numeric: tabular-nums; }
+
+.options { display: grid; gap: 10px; }
+.option {
+  display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center;
+  width: 100%; text-align: left; font: inherit; color: var(--text); cursor: pointer;
+  background: var(--surface); border: 2px solid var(--line); border-radius: 14px;
+  padding: 14px 16px; min-height: 58px;
+  transition: border-color .12s, background .12s;
+}
+.option:hover { border-color: var(--frost); background: var(--frost-soft); }
+.option .key {
+  display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid var(--frost); font-family: var(--font-mono); font-weight: 600; font-size: .85rem;
+  color: var(--kobalt); font-variant-numeric: tabular-nums;
+}
+.option[aria-checked="true"] { border-color: var(--kobalt); background: var(--frost-soft); }
+.option[aria-checked="true"] .key { background: var(--limette); border-color: var(--limette); }
+.hint { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); }
+
+/* Ergebnis: runder Button wie die Marken-Icons, in Limette */
+.result-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px; align-items: center; }
+.disc {
+  width: clamp(112px, 30vw, 148px); aspect-ratio: 1; max-width: 100%; border-radius: 50%;
+  background: var(--limette); color: var(--kobalt);
+  display: grid; place-content: center; text-align: center;
+}
+.disc .num { font-weight: 700; font-size: clamp(2.6rem, 11vw, 3.4rem); line-height: 1; font-variant-numeric: tabular-nums; }
+.disc .of { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .04em; }
+.result-head .titles { display: grid; gap: 6px; min-width: 0; }
+@media (max-width: 420px) { .result-head { grid-template-columns: 1fr; } }
+
+.scale { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; font-size: .78rem; color: var(--muted); }
+.scale div { border-top: 5px solid var(--line); padding-top: 6px; min-width: 0; overflow-wrap: anywhere; }
+.scale div.hit { border-color: var(--limette); color: var(--kobalt); font-weight: 700; }
+.scale b { display: block; font-family: var(--font-mono); font-weight: 400; font-variant-numeric: tabular-nums; }
+
+.panel { background: var(--frost-soft); border-radius: 14px; padding: clamp(16px, 4vw, 24px); display: grid; gap: 14px; }
+.breakdown { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.breakdown li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; }
+.breakdown .name { font-weight: 700; color: var(--kobalt); min-width: 0; }
+.breakdown .pts { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--muted); font-size: .8rem; }
+.breakdown .bar { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.breakdown .bar span { height: 8px; border-radius: 4px; background: var(--white); }
+.breakdown .bar span.on { background: var(--kobalt); }
+.breakdown .q { grid-column: 1 / -1; font-size: .85rem; color: var(--muted); }
+
+.claim { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; font-family: var(--font-mono); font-size: .78rem; color: var(--kobalt); }
+.foot { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); text-align: center; margin-inline: auto; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .screen { animation: in .25s ease both; }
+  @keyframes in { from { opacity: .4; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="brandbar">
+    <span class="brandname" id="brandname">Wallersee<br>Apotheke</span>
+    <img class="brandlogo" id="brandlogo" src="assets/logo.svg" alt="Wallersee Apotheke" hidden>
+    <span class="crumb">Lehre &gt; <b>PKA-Check</b></span>
+  </header>
+
+  <!-- Start -->
+  <section id="screen-start" class="card screen" aria-labelledby="start-title">
+    <span class="kicker">Lehrstelle PKA</span>
+    <h1 id="start-title">Passt's für di?</h1>
+    <p>Als Pharmazeutisch-kaufmännische:r Assistent:in arbeitest du genau, organisiert und mit Menschen. Beantworte 7 kurze Fragen ehrlich und finde heraus, welcher Typ du bist.</p>
+    <ul class="facts">
+      <li>7 Fragen</li>
+      <li>1 pro Bereich</li>
+      <li>max. 14 Punkte</li>
+      <li>ca. 2 Minuten</li>
+    </ul>
+    <p class="hint">Es gibt keine falschen Antworten. Jede Runde stellt neue Fragen aus einem Pool von 35.</p>
+    <div class="actions">
+      <button id="btn-start" class="btn" type="button">Los geht's</button>
+    </div>
+  </section>
+
+  <!-- Frage -->
+  <section id="screen-quiz" class="card screen" hidden>
+    <div class="progress" id="progress" aria-hidden="true"></div>
+    <div class="qmeta">
+      <span class="cat" id="q-cat"></span>
+      <span class="step" id="q-step" aria-live="polite"></span>
+    </div>
+    <h2 id="q-text"></h2>
+    <div class="options" id="q-options" role="radiogroup" aria-labelledby="q-text"></div>
+    <p class="hint">Tipp: Tasten 1 bis 3 wählen, Enter geht weiter.</p>
+    <div class="actions">
+      <button id="btn-back" class="btn ghost" type="button">Zurück</button>
+      <button id="btn-next" class="btn" type="button" disabled>Weiter</button>
+    </div>
+  </section>
+
+  <!-- Ergebnis -->
+  <section id="screen-result" class="card screen" aria-labelledby="r-title" hidden>
+    <div class="result-head">
+      <div class="disc" aria-hidden="true"><span class="num" id="r-score">0</span><span class="of">von 14</span></div>
+      <div class="titles">
+        <span class="kicker">Dein Ergebnis: <span id="r-score-text"></span> Punkte</span>
+        <h2 id="r-title"></h2>
+        <span class="say" id="r-say"></span>
+      </div>
+    </div>
+    <p id="r-text"></p>
+    <div class="scale" id="r-scale"></div>
+    <div class="panel">
+      <span class="kicker">Deine Bereiche</span>
+      <ul class="breakdown" id="r-breakdown"></ul>
+    </div>
+    <div class="actions">
+      <button id="btn-again" class="btn" type="button">Neue Runde mit anderen Fragen</button>
+    </div>
+  </section>
+
+  <div class="claim" aria-label="Claim"><span>beratend</span><span>persönlich</span><span>menschlich</span></div>
+  <p class="foot">Dieses Quiz ist eine spielerische Selbsteinschätzung und kein Eignungstest.</p>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  // Fragenpool. "s" = Punkte der Antwort. Die Reihenfolge der Antworten wird beim Anzeigen gemischt.
+  var CATEGORIES = [
+    { id: "A", name: "Genauigkeit", questions: [
+      { q: "Du sollst 10 Nummern abschreiben.", a: [["Langsam und am Ende kontrollieren.", 2], ["Zügig, wird schon passen.", 1], ["Ich lasse weg, was unwichtig scheint.", 0]] },
+      { q: "Das Rezept verlangt 150 g Mehl, die Waage zeigt 162 g.", a: [["Ich nehme etwas heraus, bis es stimmt.", 2], ["Passt ungefähr.", 1], ["Egal.", 0]] },
+      { q: "Die Hausaufgabe ist fertig.", a: [["Ich lese noch einmal Korrektur.", 2], ["Kurz drüberschauen.", 1], ["Einpacken, fertig.", 0]] },
+      { q: "Zwei Packungen unterscheiden sich nur durch ein kleines Detail.", a: [["Ich schaue, bis ich es finde.", 2], ["Ich frage jemanden.", 1], ["Ich nehme irgendeine.", 0]] },
+      { q: "Bei Such- und Fehlerbildern …", a: [["finde ich fast alles.", 2], ["finde ich die meisten.", 1], ["gebe ich schnell auf.", 0]] }
+    ]},
+    { id: "B", name: "Organisation", questions: [
+      { q: "Deine Schultasche ist …", a: [["geordnet, alles hat seinen Platz.", 2], ["meistens ordentlich.", 1], ["ein Chaos, in dem ich mich auskenne.", 0]] },
+      { q: "Test, Training und ein Geschenk stehen an.", a: [["Ich mache mir einen Plan.", 2], ["Ich erledige, was gerade dringend ist.", 1], ["Ich schiebe alles auf.", 0]] },
+      { q: "Bei einem Gruppenprojekt …", a: [["behalte ich den Überblick, wer was macht.", 2], ["mache ich meinen Teil.", 1], ["warte ich auf Anweisungen.", 0]] },
+      { q: "Ein Regal im Geschäft ist fast leer.", a: [["Ich melde es oder fülle nach.", 2], ["Ich bemerke es, sage aber nichts.", 1], ["Nicht mein Problem.", 0]] },
+      { q: "Du sollst 20 Dinge sortieren.", a: [["Ich überlege mir zuerst ein System.", 2], ["Ich fange einfach an.", 1], ["Keine Lust.", 0]] }
+    ]},
+    { id: "C", name: "Umgang mit Menschen", questions: [
+      { q: "Jemand wirkt im Geschäft ratlos.", a: [["Ich spreche ihn freundlich an.", 2], ["Ich helfe, wenn er fragt.", 1], ["Ich schaue weg.", 0]] },
+      { q: "Jemand ist unfreundlich zu dir.", a: [["Ich bleibe ruhig und freundlich.", 2], ["Ich bin verunsichert, helfe aber trotzdem.", 1], ["Ich werde auch unfreundlich.", 0]] },
+      { q: "Du sollst einer älteren Person etwas am Handy erklären.", a: [["Geduldig, Schritt für Schritt.", 2], ["Einmal schnell.", 1], ["Lieber jemand anders.", 0]] },
+      { q: "Beim Schulfest sollst du Gäste begrüßen.", a: [["Gern.", 2], ["Geht, wenn es sein muss.", 1], ["Schrecklich.", 0]] },
+      { q: "Ein Freund erzählt ein Problem.", a: [["Ich höre zu und frage nach.", 2], ["Ich gebe gleich einen Rat.", 1], ["Ich wechsle das Thema.", 0]] }
+    ]},
+    { id: "D", name: "Zahlen und Logik", questions: [
+      { q: "Kopfrechnen und Wechselgeld …", a: [["machen mir Spaß.", 2], ["gehen mit Taschenrechner.", 1], ["mag ich gar nicht.", 0]] },
+      { q: "Bei Zahlenreihen wie 2, 4, 8, 16 …", a: [["finde ich die Regel gern.", 2], ["probiere ich herum.", 1], ["überspringe ich.", 0]] },
+      { q: "Mein Taschengeld:", a: [["Ich weiß ungefähr, wofür ich es ausgebe.", 2], ["Grob.", 1], ["Ich weiß nie, wo es hin ist.", 0]] },
+      { q: "Bei einer Tabelle mit Preisen und Mengen …", a: [["behalte ich den Überblick.", 2], ["geht es so.", 1], ["bin ich verwirrt.", 0]] },
+      { q: "Du vergleichst zwei Angebote: 2 Stück für 3 € oder 5 Stück für 6,50 €.", a: [["Ich rechne den Preis pro Stück aus.", 2], ["Ich schätze.", 1], ["Ich nehme das Erste.", 0]] }
+    ]},
+    { id: "E", name: "Lernbereitschaft", questions: [
+      { q: "Du hörst einen Fachbegriff, den du nicht kennst.", a: [["Ich frage nach und merke ihn mir.", 2], ["Ich überhöre ihn.", 1], ["Das nervt.", 0]] },
+      { q: "Dir passiert ein Fehler.", a: [["Ich gebe ihn zu und korrigiere ihn.", 2], ["Ich hoffe, keiner merkt es.", 1], ["Es war jemand anders.", 0]] },
+      { q: "Am ersten Tag an einem neuen Ort ist alles unbekannt.", a: [["Ich bin neugierig und frage.", 2], ["Ich warte ab.", 1], ["Ich will heim.", 0]] },
+      { q: "Etwas klappt beim ersten Mal nicht.", a: [["Ich probiere es nochmal.", 2], ["Ich hole Hilfe.", 1], ["Ich gebe auf.", 0]] },
+      { q: "Du darfst Profis einen Tag begleiten.", a: [["Ich will mitanpacken.", 2], ["Ich schaue zu.", 1], ["Eher nicht.", 0]] }
+    ]},
+    { id: "F", name: "Gesundheit", questions: [
+      { q: "Auf einer Packung steht ein Hinweis zur Anwendung.", a: [["Ich lese ihn und frage bei Unklarheit nach.", 2], ["Ich überfliege ihn.", 1], ["Interessiert mich nicht.", 0]] },
+      { q: "Bei Kosmetik oder Lebensmitteln …", a: [["schaue ich gern, was drinsteckt.", 2], ["manchmal.", 1], ["nie.", 0]] },
+      { q: "Jemand in deiner Familie fühlt sich krank.", a: [["Ich frage, was er braucht, und hole bei Bedarf Erwachsene dazu.", 2], ["Ich halte Abstand.", 1], ["Ist mir egal.", 0]] },
+      { q: "Wie der Körper funktioniert, …", a: [["interessiert mich sehr.", 2], ["ein bisschen.", 1], ["kaum.", 0]] },
+      { q: "Dein Freund hat Kopfweh und fragt dich nach einer Tablette.", a: [["Ich sage ihm, dass er Erwachsene oder die Apotheke fragen soll.", 2], ["Ich überlege, ob ich selbst etwas dabeihabe.", 1], ["Ich gebe ihm irgendeine Tablette.", 0]] }
+    ]},
+    { id: "G", name: "Verantwortungsbewusstsein", questions: [
+      { q: "Du hast eine feste Aufgabe zu Hause (z. B. Haustier, Müll).", a: [["Ich erledige sie zuverlässig.", 2], ["Wenn man mich erinnert.", 1], ["Ich vergesse sie oft.", 0]] },
+      { q: "Du hast etwas Geliehenes kaputt gemacht.", a: [["Ich melde mich sofort.", 2], ["Ich hoffe, es fällt nicht auf.", 1], ["Ich sage nichts.", 0]] },
+      { q: "Dir wird etwas Wichtiges anvertraut (z. B. ein Schlüssel).", a: [["Ich passe gut darauf auf.", 2], ["Ich behandle es wie alles andere.", 1], ["Ich verliere Dinge oft.", 0]] },
+      { q: "Du bist verabredet.", a: [["Ich bin pünktlich oder sage rechtzeitig Bescheid.", 2], ["Meistens pünktlich.", 1], ["Ich komme, wann ich komme.", 0]] },
+      { q: "Ein jüngeres Kind braucht Hilfe.", a: [["Ich helfe oder hole Hilfe.", 2], ["Ich schaue, ob jemand anderes hilft.", 1], ["Geht mich nichts an.", 0]] }
+    ]}
+  ];
+
+  var LEVELS = [
+    { min: 12, max: 14, title: "Super-PKA", say: "Leiwand!",
+      text: "Genau, organisiert und offen für Menschen: Du bringst schon jetzt viel von dem mit, was im Apothekenalltag zählt. Eine Schnupperlehre in einer Apotheke wäre ein guter nächster Schritt." },
+    { min: 9, max: 11, title: "PKA mit Potenzial", say: "Do is wos drin!",
+      text: "Du hast eine solide Basis für den Beruf. Ein paar Bereiche kannst du in der Lehre noch ausbauen, und genau dafür ist sie da. Schau dir unten an, wo du schon stark bist." },
+    { min: 5, max: 8, title: "Talent für Teamarbeit", say: "Mitanond geht's leichter!",
+      text: "Du hast Stärken, die im Team wertvoll sind. Manche Seiten des Berufs sind vielleicht noch neu für dich. Ein Schnuppertag zeigt dir am besten, ob dir die Arbeit in der Apotheke Spaß macht." },
+    { min: 0, max: 4, title: "Entdecker:in", say: "Schau ma moi!",
+      text: "Du bist noch am Anfang und entdeckst gerade, was zu dir passt. Das ist völlig in Ordnung. Probier eine neue Runde oder schau dir den Beruf direkt in einer Apotheke an." }
+  ];
+
+  var MAX = CATEGORIES.length * 2;
+  var $ = function (id) { return document.getElementById(id); };
+  var screens = { start: $("screen-start"), quiz: $("screen-quiz"), result: $("screen-result") };
+
+  var round = [];      // [{cat, qIndex, options:[[text,score],...]}]
+  var answers = [];    // gewählter Options-Index je Frage oder null
+  var current = 0;
+  var lastPicked = {}; // Kategorie-ID -> zuletzt gestellte Frage, damit die nächste Runde andere Fragen bringt
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function pickIndex(cat) {
+    var pool = [];
+    for (var i = 0; i < cat.questions.length; i++) if (i !== lastPicked[cat.id]) pool.push(i);
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function newRound() {
+    round = CATEGORIES.map(function (cat) {
+      var idx = pickIndex(cat);
+      lastPicked[cat.id] = idx;
+      return { cat: cat, q: cat.questions[idx].q, options: shuffle(cat.questions[idx].a) };
+    });
+    answers = round.map(function () { return null; });
+    current = 0;
+  }
+
+  function show(name) {
+    Object.keys(screens).forEach(function (k) { screens[k].hidden = k !== name; });
+    window.scrollTo(0, 0);
+  }
+
+  function renderProgress() {
+    var el = $("progress");
+    el.innerHTML = "";
+    round.forEach(function (_, i) {
+      var s = document.createElement("span");
+      if (i < current) s.className = "done";
+      else if (i === current) s.className = "now";
+      el.appendChild(s);
+    });
+  }
+
+  function renderQuestion() {
+    var item = round[current];
+    renderProgress();
+    $("q-cat").textContent = item.cat.name;
+    $("q-step").textContent = "Frage " + (current + 1) + " / " + round.length;
+    $("q-text").textContent = item.q;
+
+    var box = $("q-options");
+    box.innerHTML = "";
+    item.options.forEach(function (opt, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "option";
+      b.id = "opt-" + i;
+      b.setAttribute("role", "radio");
+      b.setAttribute("aria-checked", answers[current] === i ? "true" : "false");
+      b.tabIndex = (answers[current] === i || (answers[current] === null && i === 0)) ? 0 : -1;
+      var k = document.createElement("span");
+      k.className = "key";
+      k.textContent = String(i + 1);
+      var t = document.createElement("span");
+      t.textContent = opt[0];
+      b.appendChild(k); b.appendChild(t);
+      b.addEventListener("click", function () { choose(i); });
+      box.appendChild(b);
+    });
+
+    $("btn-back").hidden = current === 0;
+    $("btn-next").disabled = answers[current] === null;
+    $("btn-next").textContent = current === round.length - 1 ? "Auswerten" : "Weiter";
+  }
+
+  function choose(i) {
+    answers[current] = i;
+    var opts = $("q-options").querySelectorAll(".option");
+    opts.forEach(function (o, j) {
+      o.setAttribute("aria-checked", j === i ? "true" : "false");
+      o.tabIndex = j === i ? 0 : -1;
+    });
+    opts[i].focus();
+    $("btn-next").disabled = false;
+  }
+
+  function next() {
+    if (answers[current] === null) return;
+    if (current < round.length - 1) { current++; renderQuestion(); $("q-options").querySelector(".option").focus(); }
+    else renderResult();
+  }
+
+  function back() {
+    if (current > 0) { current--; renderQuestion(); }
+  }
+
+  function levelFor(score) {
+    for (var i = 0; i < LEVELS.length; i++) if (score >= LEVELS[i].min && score <= LEVELS[i].max) return LEVELS[i];
+    return LEVELS[LEVELS.length - 1];
+  }
+
+  function renderResult() {
+    var total = 0;
+    var parts = round.map(function (item, i) {
+      var pts = item.options[answers[i]][1];
+      total += pts;
+      return { item: item, pts: pts };
+    });
+    var level = levelFor(total);
+
+    $("r-score").textContent = total;
+    $("r-score-text").textContent = total;
+    $("r-say").textContent = level.say;
+    $("r-title").textContent = level.title;
+    $("r-text").textContent = level.text;
+
+    var scale = $("r-scale");
+    scale.innerHTML = "";
+    LEVELS.slice().reverse().forEach(function (l) {
+      var d = document.createElement("div");
+      if (l === level) d.className = "hit";
+      d.appendChild(document.createTextNode(l.title));
+      var b = document.createElement("b");
+      b.textContent = l.min + " bis " + l.max;
+      d.appendChild(b);
+      scale.appendChild(d);
+    });
+
+    var list = $("r-breakdown");
+    list.innerHTML = "";
+    parts.forEach(function (p) {
+      var li = document.createElement("li");
+      var n = document.createElement("span"); n.className = "name"; n.textContent = p.item.cat.name;
+      var s = document.createElement("span"); s.className = "pts"; s.textContent = p.pts + " / 2";
+      var bar = document.createElement("span"); bar.className = "bar"; bar.setAttribute("aria-hidden", "true");
+      for (var k = 0; k < 2; k++) { var seg = document.createElement("span"); if (k < p.pts) seg.className = "on"; bar.appendChild(seg); }
+      var q = document.createElement("span"); q.className = "q"; q.textContent = p.item.q;
+      li.appendChild(n); li.appendChild(s); li.appendChild(bar); li.appendChild(q);
+      list.appendChild(li);
+    });
+
+    show("result");
+    $("btn-again").focus();
+  }
+
+  function start() {
+    newRound();
+    renderQuestion();
+    show("quiz");
+    $("q-options").querySelector(".option").focus();
+  }
+
+  // Offizielles Logo verwenden, sobald assets/logo.svg vorhanden ist; sonst bleibt der Markenname als Text.
+  var logo = $("brandlogo");
+  logo.addEventListener("load", function () { logo.hidden = false; $("brandname").hidden = true; });
+  if (logo.complete && logo.naturalWidth > 0) { logo.hidden = false; $("brandname").hidden = true; }
+
+  $("btn-start").addEventListener("click", start);
+  $("btn-again").addEventListener("click", start);
+  $("btn-next").addEventListener("click", next);
+  $("btn-back").addEventListener("click", back);
+
+  document.addEventListener("keydown", function (e) {
+    if (screens.quiz.hidden || e.altKey || e.ctrlKey || e.metaKey) return;
+    var n = parseInt(e.key, 10);
+    var count = round[current].options.length;
+    if (n >= 1 && n <= count) { choose(n - 1); e.preventDefault(); return; }
+    if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === "ArrowUp" || e.key === "ArrowLeft") {
+      if (!document.activeElement || !document.activeElement.classList.contains("option")) return;
+      var d = (e.key === "ArrowDown" || e.key === "ArrowRight") ? 1 : -1;
+      var cur = answers[current] === null ? (d > 0 ? -1 : 0) : answers[current];
+      choose((cur + d + count) % count);
+      e.preventDefault();
+      return;
+    }
+    if (e.key === "Enter" && answers[current] !== null && document.activeElement && document.activeElement.classList.contains("option")) {
+      next();
+      e.preventDefault();
+    }
+  });
+
+  // Plausibilitätsprüfung des Pools: 7 Kategorien, je Frage Punkte 0, 1, 2
+  if (MAX !== 14) console.warn("Erwartet 7 Kategorien, gefunden: " + CATEGORIES.length);
+})();
+</script>
+</body>
+</html>
