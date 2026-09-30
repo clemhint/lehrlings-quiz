@@ -146,15 +146,6 @@ p { margin: 0; max-width: 62ch; }
 .scale div.hit { border-color: var(--limette); color: var(--kobalt); font-weight: 700; }
 .scale b { display: block; font-family: var(--font-mono); font-weight: 400; font-variant-numeric: tabular-nums; }
 
-.panel { background: var(--frost-soft); border-radius: 14px; padding: clamp(16px, 4vw, 24px); display: grid; gap: 14px; }
-.breakdown { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-.breakdown li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; }
-.breakdown .name { font-weight: 700; color: var(--kobalt); min-width: 0; }
-.breakdown .pts { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--muted); font-size: .8rem; }
-.breakdown .bar { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-.breakdown .bar span { height: 8px; border-radius: 4px; background: var(--white); }
-.breakdown .bar span.on { background: var(--kobalt); }
-.breakdown .q { grid-column: 1 / -1; font-size: .85rem; color: var(--muted); }
 
 .claim { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; font-family: var(--font-mono); font-size: .78rem; color: var(--kobalt); }
 .invite { background: var(--frost-soft); border-left: 5px solid var(--limette); border-radius: 0 14px 14px 0; padding: 16px 18px; display: grid; gap: 8px; color: var(--kobalt); }
@@ -180,7 +171,7 @@ p { margin: 0; max-width: 62ch; }
     <h1 id="start-title">PKA - wär' das was für dich?</h1>
     <p class="say">Wir trauen dir was zu.</p>
     <p>7 kurze Fragen, 2 Minuten, kein Vorwissen nötig. Finde heraus, was in dir steckt!</p>
-    <p class="hint">Keine Eignungsprüfung. Es werden keine Daten gespeichert.</p>
+    <p class="hint">Keine Eignungsprüfung.</p>
     <div class="actions">
       <button id="btn-start" class="btn" type="button">Los geht's</button>
     </div>
@@ -218,10 +209,6 @@ p { margin: 0; max-width: 62ch; }
       <p id="r-insta">Folge uns auf Instagram, dort zeigen wir, wie ein Tag in der Wallersee-Apotheke aussieht.</p>
     </div>
     <div class="scale" id="r-scale"></div>
-    <div class="panel">
-      <span class="kicker">Deine Bereiche</span>
-      <ul class="breakdown" id="r-breakdown"></ul>
-    </div>
     <div class="actions">
       <button id="btn-again" class="btn" type="button">Neue Runde mit anderen Fragen</button>
     </div>
@@ -293,7 +280,7 @@ p { margin: 0; max-width: 62ch; }
     { min: 9, max: 11, title: "PKA mit Potenzial", say: "Do is wos drin!",
       text: "Gute Basis, der Rest wächst beim Schnuppern." },
     { min: 5, max: 8, title: "Talent für Teamarbeit", say: "Mitanond geht's leichter!",
-      text: "Du bist kein klassischer PKA, aber Menschen und Organisation liegen dir. Schau dich auch in anderen Berufen um." },
+      text: "Menschen und Organisation liegen dir. Mit der richtigen Ambition kann aus dir ein:e richtig gute:r PKA werden. Schau dich aber auch in anderen Berufen um." },
     { min: 0, max: 4, title: "Entdecker:in", say: "Schau ma moi!",
       text: "Noch offen, und das ist normal. Probier vieles aus." }
   ];
@@ -411,11 +398,7 @@ p { margin: 0; max-width: 62ch; }
 
   function renderResult() {
     var total = 0;
-    var parts = round.map(function (item, i) {
-      var pts = item.options[answers[i]][1];
-      total += pts;
-      return { item: item, pts: pts };
-    });
+    round.forEach(function (item, i) { total += item.options[answers[i]][1]; });
     var level = levelFor(total);
 
     $("r-score").textContent = total;
@@ -434,19 +417,6 @@ p { margin: 0; max-width: 62ch; }
       b.textContent = l.min + " bis " + l.max;
       d.appendChild(b);
       scale.appendChild(d);
-    });
-
-    var list = $("r-breakdown");
-    list.innerHTML = "";
-    parts.forEach(function (p) {
-      var li = document.createElement("li");
-      var n = document.createElement("span"); n.className = "name"; n.textContent = p.item.cat.name;
-      var s = document.createElement("span"); s.className = "pts"; s.textContent = p.pts + " / 2";
-      var bar = document.createElement("span"); bar.className = "bar"; bar.setAttribute("aria-hidden", "true");
-      for (var k = 0; k < 2; k++) { var seg = document.createElement("span"); if (k < p.pts) seg.className = "on"; bar.appendChild(seg); }
-      var q = document.createElement("span"); q.className = "q"; q.textContent = p.item.q;
-      li.appendChild(n); li.appendChild(s); li.appendChild(bar); li.appendChild(q);
-      list.appendChild(li);
     });
 
     show("result");
