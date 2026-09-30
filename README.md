@@ -10,12 +10,12 @@ Pro Durchgang wird aus jeder der 7 Kategorien (Genauigkeit, Organisation, Umgang
 
 | Punkte | Ergebnis |
 | --- | --- |
-| 12 bis 14 | Super-PKA |
+| 12 bis 14 | Zukünftige Super-PKA |
 | 9 bis 11 | PKA mit Potenzial |
 | 5 bis 8 | Talent für Teamarbeit |
 | 0 bis 4 | Entdecker:in |
 
-Fragen und Ergebnistexte stehen als Daten (`CATEGORIES`, `LEVELS`) oben im Skript von `index.html`.
+Fragen und Ergebnistexte stehen als Daten (`CATEGORIES`, `LEVELS`) oben im Skript von `index.html`. Dort lässt sich auch mit `INSTAGRAM_URL` das Instagram-Profil eintragen; dann wird „Instagram“ im Ergebnistext verlinkt.
 
 ## Markenauftritt
 

@@ -83,12 +83,6 @@ p { margin: 0; max-width: 62ch; }
 }
 .say { font-weight: 700; color: var(--petrol); font-size: 1.15rem; }
 
-.facts { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
-.facts li {
-  background: var(--frost-soft); color: var(--kobalt);
-  font-family: var(--font-mono); font-size: .8rem;
-  border-radius: 999px; padding: 5px 12px;
-}
 
 .btn {
   font: inherit; font-weight: 700; cursor: pointer;
@@ -163,7 +157,8 @@ p { margin: 0; max-width: 62ch; }
 .breakdown .q { grid-column: 1 / -1; font-size: .85rem; color: var(--muted); }
 
 .claim { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; font-family: var(--font-mono); font-size: .78rem; color: var(--kobalt); }
-.foot { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); text-align: center; margin-inline: auto; }
+.invite { background: var(--frost-soft); border-left: 5px solid var(--limette); border-radius: 0 14px 14px 0; padding: 16px 18px; display: grid; gap: 8px; color: var(--kobalt); }
+.invite a { color: var(--kobalt); font-weight: 700; text-underline-offset: 3px; }
 
 @media (prefers-reduced-motion: no-preference) {
   .screen { animation: in .25s ease both; }
@@ -182,15 +177,10 @@ p { margin: 0; max-width: 62ch; }
   <!-- Start -->
   <section id="screen-start" class="card screen" aria-labelledby="start-title">
     <span class="kicker">Lehrstelle PKA</span>
-    <h1 id="start-title">Passt's für di?</h1>
-    <p>Als Pharmazeutisch-kaufmännische:r Assistent:in arbeitest du genau, organisiert und mit Menschen. Beantworte 7 kurze Fragen ehrlich und finde heraus, welcher Typ du bist.</p>
-    <ul class="facts">
-      <li>7 Fragen</li>
-      <li>1 pro Bereich</li>
-      <li>max. 14 Punkte</li>
-      <li>ca. 2 Minuten</li>
-    </ul>
-    <p class="hint">Es gibt keine falschen Antworten. Jede Runde stellt neue Fragen aus einem Pool von 35.</p>
+    <h1 id="start-title">PKA - wär' das was für dich?</h1>
+    <p class="say">Wir trauen dir was zu.</p>
+    <p>7 kurze Fragen, 2 Minuten, kein Vorwissen nötig. Finde heraus, was in dir steckt!</p>
+    <p class="hint">Keine Eignungsprüfung. Es werden keine Daten gespeichert.</p>
     <div class="actions">
       <button id="btn-start" class="btn" type="button">Los geht's</button>
     </div>
@@ -223,6 +213,10 @@ p { margin: 0; max-width: 62ch; }
       </div>
     </div>
     <p id="r-text"></p>
+    <div class="invite">
+      <p>Schnuppern ist bei uns möglich. Frag einfach nach, ganz ohne Druck.</p>
+      <p id="r-insta">Folge uns auf Instagram, dort zeigen wir, wie ein Tag in der Wallersee-Apotheke aussieht.</p>
+    </div>
     <div class="scale" id="r-scale"></div>
     <div class="panel">
       <span class="kicker">Deine Bereiche</span>
@@ -234,7 +228,6 @@ p { margin: 0; max-width: 62ch; }
   </section>
 
   <div class="claim" aria-label="Claim"><span>beratend</span><span>persönlich</span><span>menschlich</span></div>
-  <p class="foot">Dieses Quiz ist eine spielerische Selbsteinschätzung und kein Eignungstest.</p>
 </main>
 
 <script>
@@ -295,15 +288,18 @@ p { margin: 0; max-width: 62ch; }
   ];
 
   var LEVELS = [
-    { min: 12, max: 14, title: "Super-PKA", say: "Leiwand!",
-      text: "Genau, organisiert und offen für Menschen: Du bringst schon jetzt viel von dem mit, was im Apothekenalltag zählt. Eine Schnupperlehre in einer Apotheke wäre ein guter nächster Schritt." },
+    { min: 12, max: 14, title: "Zukünftige Super-PKA", say: "Leiwand!",
+      text: "Genau, organisiert, teamfähig. Du hast das Zeug dazu." },
     { min: 9, max: 11, title: "PKA mit Potenzial", say: "Do is wos drin!",
-      text: "Du hast eine solide Basis für den Beruf. Ein paar Bereiche kannst du in der Lehre noch ausbauen, und genau dafür ist sie da. Schau dir unten an, wo du schon stark bist." },
+      text: "Gute Basis, der Rest wächst beim Schnuppern." },
     { min: 5, max: 8, title: "Talent für Teamarbeit", say: "Mitanond geht's leichter!",
-      text: "Du hast Stärken, die im Team wertvoll sind. Manche Seiten des Berufs sind vielleicht noch neu für dich. Ein Schnuppertag zeigt dir am besten, ob dir die Arbeit in der Apotheke Spaß macht." },
+      text: "Du bist kein klassischer PKA, aber Menschen und Organisation liegen dir. Schau dich auch in anderen Berufen um." },
     { min: 0, max: 4, title: "Entdecker:in", say: "Schau ma moi!",
-      text: "Du bist noch am Anfang und entdeckst gerade, was zu dir passt. Das ist völlig in Ordnung. Probier eine neue Runde oder schau dir den Beruf direkt in einer Apotheke an." }
+      text: "Noch offen, und das ist normal. Probier vieles aus." }
   ];
+
+  // Instagram-Profil der Apotheke eintragen (z. B. "https://www.instagram.com/…/"), dann wird "Instagram" im Ergebnis verlinkt.
+  var INSTAGRAM_URL = "";
 
   var MAX = CATEGORIES.length * 2;
   var $ = function (id) { return document.getElementById(id); };
@@ -468,6 +464,14 @@ p { margin: 0; max-width: 62ch; }
   var logo = $("brandlogo");
   logo.addEventListener("load", function () { logo.hidden = false; $("brandname").hidden = true; });
   if (logo.complete && logo.naturalWidth > 0) { logo.hidden = false; $("brandname").hidden = true; }
+
+  if (INSTAGRAM_URL) {
+    var insta = $("r-insta");
+    var a = document.createElement("a");
+    a.href = INSTAGRAM_URL; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Instagram";
+    insta.textContent = "";
+    insta.append("Folge uns auf ", a, ", dort zeigen wir, wie ein Tag in der Wallersee-Apotheke aussieht.");
+  }
 
   $("btn-start").addEventListener("click", start);
   $("btn-again").addEventListener("click", start);
