@@ -19,7 +19,6 @@ Fragen und Ergebnistexte stehen als Daten (`CATEGORIES`, `LEVELS`) oben im Skrip
 
 ## Markenauftritt
 
-Farben und Typografie folgen den Brand Guidelines der Wallersee Apotheke (Stand 05/2026). Zwei Dateien sind aus Lizenzgründen nicht im Repository und können ergänzt werden:
+Farben und Typografie folgen den Brand Guidelines der Wallersee Apotheke (Stand 05/2026). Das Logo liegt als weiße Negativ-Variante in `assets/logo-negativ.png` (Hintergrund der Seite ist Kobalt). Die Schriften sind aus Lizenzgründen nicht im Repository und können ergänzt werden:
 
 * `fonts/Mg-Regular.woff2`, `fonts/Mg-Bold.woff2`, `fonts/BasierSquareMono-Regular.woff2`, `fonts/BasierSquareMono-SemiBold.woff2` (Webfont-Lizenz der Atipo Foundry nötig). Fehlen sie, wird der in den Guidelines vorgesehene Fallback Arial verwendet.
-* `assets/logo.svg` (offizielles Logo, positive Variante). Fehlt es, steht der Markenname als Text in der Kopfzeile.

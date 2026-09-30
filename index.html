@@ -26,7 +26,7 @@
   --rotbraun: #7c533c;
   --white: #ffffff;
 
-  --bg: var(--sand);
+  --bg: var(--kobalt);
   --surface: var(--white);
   --fg: var(--kobalt);
   --text: #1d3f6e;          /* Kobalt abgedunkelt für lange Fließtexte */
@@ -57,13 +57,11 @@ body {
 
 .wrap { max-width: 42rem; margin-inline: auto; display: grid; gap: 18px; }
 
-/* Kopfzeile: Markenname im Text (Guidelines: "Reine Bildmarke und Markenname im Text integriert").
-   Liegt das offizielle Logo als assets/logo.svg vor, wird es statt des Textes gezeigt. */
-.brandbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.brandname { font-weight: 700; color: var(--kobalt); font-size: 1.05rem; line-height: 1.1; }
-.brandlogo { height: 40px; width: auto; display: block; }
-.crumb { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .04em; color: var(--kobalt); }
-.crumb b { font-weight: 600; }
+/* Kopfzeile auf Kobalt: negatives (weißes) Logo, Mindesthöhe laut Guidelines 10 mm (ca. 38 px). */
+.brandbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: 4px 8px; }
+.brandlogo { height: 48px; width: auto; max-width: 100%; display: block; }
+.crumb { font-family: var(--font-mono); font-size: .75rem; letter-spacing: .04em; color: var(--frost); }
+.crumb b { font-weight: 600; color: var(--white); }
 
 .card {
   background: var(--surface);
@@ -147,7 +145,7 @@ p { margin: 0; max-width: 62ch; }
 .scale b { display: block; font-family: var(--font-mono); font-weight: 400; font-variant-numeric: tabular-nums; }
 
 
-.claim { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; font-family: var(--font-mono); font-size: .78rem; color: var(--kobalt); }
+.claim { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; font-family: var(--font-mono); font-size: .78rem; color: var(--frost); }
 .invite { background: var(--frost-soft); border-left: 5px solid var(--limette); border-radius: 0 14px 14px 0; padding: 16px 18px; display: grid; gap: 8px; color: var(--kobalt); }
 .invite a { color: var(--kobalt); font-weight: 700; text-underline-offset: 3px; }
 
@@ -160,15 +158,14 @@ p { margin: 0; max-width: 62ch; }
 <body>
 <main class="wrap">
   <header class="brandbar">
-    <span class="brandname" id="brandname">Wallersee<br>Apotheke</span>
-    <img class="brandlogo" id="brandlogo" src="assets/logo.svg" alt="Wallersee Apotheke" hidden>
+    <img class="brandlogo" src="assets/logo-negativ.png" width="1338" height="512" alt="Wallersee Apotheke">
     <span class="crumb">Lehre &gt; <b>PKA-Check</b></span>
   </header>
 
   <!-- Start -->
   <section id="screen-start" class="card screen" aria-labelledby="start-title">
     <span class="kicker">Lehrstelle PKA</span>
-    <h1 id="start-title">PKA - wär' das was für dich?</h1>
+    <h1 id="start-title">PKA – wär' das was für dich?</h1>
     <p class="say">Wir trauen dir was zu.</p>
     <p>7 kurze Fragen, 2 Minuten, kein Vorwissen nötig. Finde heraus, was in dir steckt!</p>
     <p class="hint">Keine Eignungsprüfung.</p>
@@ -276,7 +273,7 @@ p { margin: 0; max-width: 62ch; }
 
   var LEVELS = [
     { min: 12, max: 14, title: "Zukünftige Super-PKA", sub: "Genau, organisiert, teamfähig.",
-      text: "Du hast das Zeug dazu, ein:e unglaublich wertvolle:r PKA zu werden, um die/den sich jede Apotheke reißen wird - nütze dein Potential!" },
+      text: "Du hast das Zeug dazu, ein:e unglaublich wertvolle:r PKA zu werden, um die/den sich jede Apotheke reißen wird – nütze dein Potenzial!" },
     { min: 9, max: 11, title: "PKA mit Potenzial", sub: "Richtig gute Basis",
       text: "Der Rest wächst beim Tun. Mit Fleiß und Ambition bist du auf dem besten Weg in Richtung Super-PKA!" },
     { min: 5, max: 8, title: "Talent für Teamarbeit", sub: "Menschen und Organisation liegen dir.",
@@ -429,11 +426,6 @@ p { margin: 0; max-width: 62ch; }
     show("quiz");
     $("q-options").querySelector(".option").focus();
   }
-
-  // Offizielles Logo verwenden, sobald assets/logo.svg vorhanden ist; sonst bleibt der Markenname als Text.
-  var logo = $("brandlogo");
-  logo.addEventListener("load", function () { logo.hidden = false; $("brandname").hidden = true; });
-  if (logo.complete && logo.naturalWidth > 0) { logo.hidden = false; $("brandname").hidden = true; }
 
   if (INSTAGRAM_URL) {
     var insta = $("r-insta");
